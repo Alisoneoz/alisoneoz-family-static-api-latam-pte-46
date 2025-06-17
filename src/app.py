@@ -46,9 +46,14 @@ def add_new_member():
     member = request.get_json()
     if not member or 'first_name' not in member or 'age' not in member or 'lucky_numbers' not in member:
         return jsonify({"error": "Invalid member data"}), 400
+ # Añadir el miembro
     jackson_family.add_member(member)
-    return jsonify({"message": "Member added"}), 200
 
+    # Obtener el miembro actualizado que contiene el `id`
+    added_member = jackson_family.get_all_members()[-1]  # Obtiene el último miembro añadido
+
+    # Devuelve el miembro completo, asegurándote de que tiene un 'id'
+    return jsonify(added_member), 200
 @app.route('/members/<int:member_id>', methods=['DELETE'])
 def delete_member(member_id):
     jackson_family.delete_member(member_id)
